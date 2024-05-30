@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ chatroom.name }} Room</title>
+</head>
+<body>
+    {{ chatroom.name }}
+
+    <form method="POST">
+        <input type="text" name="message" placeholder="Message...">
+        <button type="submit">Send</button>
+    </form>
+    {{ chatroom.slug|json_script:"json-chatroomname" }}
+</body>
+<script>
+    const chatRoomName = JSON.parse(document.getElementById('json-chatroomname').textContent);
+    const chatSocket = new WebSocket(
+        'ws://'
+        +window.location.host
+        +'/ws/'
+        +chatRoomName
+        +'/'
+    )
+    chatSocket.onmessage = function (e) {
+        console.log('MEssage')
+    }
+    chatSocket.onclose = function (e) {
+        console.log('Closed')
+    }
+</script>
+</html>
